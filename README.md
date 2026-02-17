@@ -75,9 +75,12 @@ The app has two tabs:
 
 **Shot Evaluation** — You set shot context (distance, defender distance, shot clock, dribbles, touch time, period, game clock, 2pt vs 3pt). We show predicted P(make) and expected value. We compare *this* 2pt shot to a *context-matched* 3pt (same defender/clock, typical arc distance) and recommend 2pt favored, 3pt favored, or roughly even, using a 5% EV threshold so we don’t overcall tiny differences.
 
+<img width="1654" height="932" alt="image" src="https://github.com/user-attachments/assets/e1fb8458-1b66-4263-bf57-d822f355ac2d" />
+
+
 **Policy Insights** — We load the policy sweep and bootstrap results (run `python -m src.simulate` first). You see the efficiency curve (percent of 2pt shots reallocated vs. gain per 100 shots). A slider lets you pick an uplift threshold; we show the corresponding percent replaced and EV gain per 100 shots. When the chosen threshold matches the bootstrap default (0.05), we display the 95% CI so you can see how precise the estimated gain is.
 
-<img width="1654" height="932" alt="image" src="https://github.com/user-attachments/assets/e1fb8458-1b66-4263-bf57-d822f355ac2d" />
+<img width="927" height="619" alt="image" src="https://github.com/user-attachments/assets/11ddec78-d093-45a9-819f-53bf1f8dfa36" />
 
 ---
 
