@@ -1,6 +1,10 @@
 # Shot Value Optimization: Expected Value Modeling and Policy Optimization for NBA Shot Selection
 
-A product-oriented data science project that turns shot prediction into a **policy optimization system**: we estimate expected value per shot, simulate counterfactual reallocation, and quantify how different decision thresholds affect team-level scoring.
+## Why This Project
+
+I love basketball! Not just watching games, but understanding *why* teams win. Shot selection, spacing, efficiency, and small tactical edges can quietly swing outcomes over a season. At the same time, I’m deeply interested in data science and how quantitative models can guide real decisions.
+
+This project combines those two interests. I wanted to move beyond surface-level basketball stats and build something that treats shot selection as a decision system: estimate value, simulate alternatives, and quantify impact. The result is a project that blends my passion for the game with my interest in turning data into actionable strategy.
 
 ---
 
@@ -90,14 +94,11 @@ Python · pandas · NumPy · scikit-learn · XGBoost · Streamlit · SHAP · mat
 
 ---
 
-## What Makes This Different
+## What Makes This Different:
 
-Most shot-prediction projects stop at accuracy: ROC-AUC, log loss, maybe calibration. This one goes further:
-
-- We **convert predictions into expected value** so every shot has a number in “points” that we can compare across types and contexts.
-- We **simulate policy**, not just a single scenario. We sweep thresholds and plot the tradeoff, then quantify uncertainty with bootstrap. That’s how you support a decision, not just a model card.
-- We **bridge modeling and strategy**: the same pipeline that trains the model also powers “what if we only reallocate when uplift > X?” That’s the difference between a one-off analysis and a reusable decision engine.
-
+- **Predictions become expected value** — each shot gets a number in points, comparable across shot type and context.
+- **Policy is simulated, not assumed** — thresholds are swept, the tradeoff is plotted, and bootstrap quantifies uncertainty. The output supports a concrete decision, not only a model card.
+- **Modeling and strategy share one pipeline** — the same code that trains the model also answers “what if we reallocate only when uplift > X?” So it doubles as a reusable decision engine.
 ---
 
 ## How to Run
@@ -118,14 +119,13 @@ From the project root:
 - Lineup- or unit-aware simulation (who is on the floor).
 - Richer uncertainty (e.g. Bayesian or posterior over policy gain).
 - Real-time or game-state conditioning for in-game tools.
-- Optional: reinforcement learning or bandits for adaptive policy tuning.
 
 ---
 
-## The Big Idea
+## The Bigger Picture
 
-Predictive modeling alone doesn’t change decisions. This project turns a make-probability model into an **expected-value and policy layer**: we quantify gain per shot, sweep decision thresholds, and report uncertainty. That’s how you go from “the model is accurate” to “here’s how much we gain if we deploy this rule.” For product or analytics DS roles, that’s the mindset that matters.
+Basketball has always been more than entertainment to me. It’s a system of decisions under constraints. This project reflects how I think about both the game and data science, not just predicting outcomes, but improving choices. By turning probabilities into expected value and policy rules, I’m using the tools of data science to explore the same question I’ve always asked while watching games: what’s the smarter shot?
+
+This project combined my love for basketball and my drive to build decision systems that create measurable impact, and I loved working on it!
 
 ---
-
-*Add your GitHub repo link, a short Loom walkthrough, or a live Streamlit link here when you have them.*
