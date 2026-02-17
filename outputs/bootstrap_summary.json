@@ -1,0 +1,6 @@
+{
+  "threshold": 0.05,
+  "mean_delta_per_100": 22.9577,
+  "ci_lower": 22.7389,
+  "ci_upper": 23.1809
+}

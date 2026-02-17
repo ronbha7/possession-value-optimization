@@ -115,8 +115,12 @@ def run() -> None:
     # --- Feature list and global defaults (for app) ---
     save_json(feature_cols, config.MODELS_DIR / "feature_list.json")
     global_defaults = {c: float(X_train[c].mean()) for c in feature_cols}
+    # For context-matched 3pt comparison: median 3pt shot distance (same context, step back to arc)
+    three_pt = train_df.loc[train_df["PTS_TYPE"] == 3, "SHOT_DIST"]
+    typical_3pt_shot_dist = float(three_pt.median()) if len(three_pt) > 0 else 23.5
+    global_defaults["typical_3pt_shot_dist"] = typical_3pt_shot_dist
     save_json(global_defaults, config.MODELS_DIR / "global_defaults.json")
-    print(f"Saved feature_list.json ({len(feature_cols)} features) and global_defaults.json.")
+    print(f"Saved feature_list.json ({len(feature_cols)} features), global_defaults.json, typical_3pt_shot_dist={typical_3pt_shot_dist:.1f}.")
 
 
 if __name__ == "__main__":
