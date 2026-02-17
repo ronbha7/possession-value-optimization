@@ -77,7 +77,7 @@ The app has two tabs:
 
 **Policy Insights** — We load the policy sweep and bootstrap results (run `python -m src.simulate` first). You see the efficiency curve (percent of 2pt shots reallocated vs. gain per 100 shots). A slider lets you pick an uplift threshold; we show the corresponding percent replaced and EV gain per 100 shots. When the chosen threshold matches the bootstrap default (0.05), we display the 95% CI so you can see how precise the estimated gain is.
 
-*(Add 1–2 screenshots here: e.g. Shot Evaluation with a recommendation, and Policy Insights with the curve and slider.)*
+<img width="1654" height="932" alt="image" src="https://github.com/user-attachments/assets/e1fb8458-1b66-4263-bf57-d822f355ac2d" />
 
 ---
 
