@@ -12,21 +12,21 @@ This project combines those two interests. I wanted to move beyond surface-level
 
 NBA teams constantly face a single question: *which shots should we take?* Shot type, distance, and context all shape whether a possession ends in points. Small shifts in shot selection—pushing a few low-value attempts toward higher-value ones—can add up over a season.
 
-This project reframes shot prediction as a **policy optimization problem**. We don’t stop at “this shot goes in 40% of the time.” We convert that into expected value (EV), then ask: *if we reallocate 2pt shots to 3pt only when the counterfactual 3pt EV beats the current 2pt EV by at least X, how much do we gain?* That’s the kind of lever a coach or front office can actually use.
+This project reframes shot prediction as a **policy optimization problem**. We don’t stop at “this shot goes in 40% of the time.” We convert that into expected value (EV), then ask: *if we reallocate 2pt shots to 3pt only when the counterfactual 3pt EV beats the current 2pt EV by at least X, how much do we gain?*
 
 ---
 
-## What We Built
+## What I Built
 
-**Data** — Shot-level logs (distance, defender, shot clock, dribbles, touch time, period, game clock, make/miss). We use a time-based 80/20 split by game so we never leak future information.
+**Data** — Shot-level logs (distance, defender, shot clock, dribbles, touch time, period, game clock, make/miss). I use a time-based 80/20 split by game so we never leak future information.
 
-**Feature engineering** — We derive time remaining, late-clock and defender-tight flags, shot-distance bins, and missing-data indicators. Player-level aggregates (e.g. make rate, 3pt rate) are computed on the **train set only**; test and cold-start players get global defaults. No W or final margin—we avoid leakage.
+**Feature engineering** — Derive time remaining, late-clock and defender-tight flags, shot-distance bins, and missing-data indicators. Player-level aggregates (e.g. make rate, 3pt rate) are computed on the **train set only**; test and cold-start players get global defaults. No W or final margin, we avoid leakage.
 
-**Modeling** — We train baseline, logistic regression, random forest, and XGBoost; we calibrate XGBoost (isotonic) so probabilities are usable for EV. Best test ROC-AUC in our run is ~0.64 (RF); we use the calibrated XGB for all EV and policy work.
+**Modeling** — Train baseline, logistic regression, random forest, and XGBoost; we calibrate XGBoost (isotonic) so probabilities are usable for EV. Best test ROC-AUC in our run is ~0.64 (RF); we use the calibrated XGB for all EV and policy work.
 
-**Expected value** — For every shot we compute EV = P(make) × point value (2 or 3). That’s the core output: expected points per attempt.
+**Expected value** — For every shot, compute EV = P(make) × point value (2 or 3). That’s the core output: expected points per attempt.
 
-**Policy layer** — For each 2pt shot we estimate the *counterfactual* 3pt EV (same context, shot at 23.5 ft). Uplift = EV3_counterfactual − EV2. We then sweep thresholds: “Replace only when uplift > δ.” For each δ we get the share of shots reallocated and the gain per 100 shots. We run bootstrap (500 samples) at a default threshold (0.05) and report a 95% CI so we can say how stable the gain is.
+**Policy layer** — For each 2pt shot we estimate the *counterfactual* 3pt EV (same context, shot at 23.5 ft). Uplift = EV3_counterfactual − EV2. We then sweep thresholds: “Replace only when uplift > δ.” For each δ we get the share of shots reallocated and the gain per 100 shots. Next, run bootstrap (500 samples) at a default threshold (0.05) and report a 95% CI so we can say how stable the gain is.
 
 ---
 
@@ -54,7 +54,7 @@ Streamlit: Shot Evaluation (P(make), EV, 2pt vs 3pt) + Policy Insights (efficien
 
 - **Model performance** — Calibrated XGB: ROC-AUC ~0.63, PR-AUC ~0.61, Brier ~0.23. Baseline (constant P(make)): ROC-AUC 0.5. The model adds clear separation over the baseline.
 
-- **Policy at 0.05 uplift threshold** — We reallocate 2pt shots whose counterfactual 3pt EV exceeds their 2pt EV by at least 0.05. In our test set that policy yields **~23.0 expected points gained per 100 shots** (95% CI: **22.7–23.2**), from bootstrap over 500 samples. So we get a stable, quantified gain from a simple threshold rule.
+- **Policy at 0.05 uplift threshold** — Reallocate 2pt shots whose counterfactual 3pt EV exceeds their 2pt EV by at least 0.05. In our test set that policy yields **~23.0 expected points gained per 100 shots** (95% CI: **22.7–23.2**), from bootstrap over 500 samples. So we get a stable, quantified gain from a simple threshold rule.
 
 - **Percentile-style simulation** — If we replace the bottom 5% of 2pt shots by EV with the average 3pt EV, we see ~458 projected points gained on the test set (~51 per 100 reallocated shots). At 10% and 15% the total gain grows while the per-100 rate stays in a similar band. The policy layer refines this by tying reallocation to *uplift* instead of a fixed percentile.
 
@@ -65,9 +65,9 @@ Streamlit: Shot Evaluation (P(make), EV, 2pt vs 3pt) + Policy Insights (efficien
 This system demonstrates:
 
 - **Counterfactual simulation** — “What would this possession be worth if it were a 3pt attempt?” We answer that per shot and use it to define uplift.
-- **Policy evaluation** — We don’t pick one magic number. We sweep thresholds and plot the tradeoff: more reallocation vs. total gain. That’s how you compare strategies.
-- **Decision optimization** — We turn model output into a rule: “Act when uplift > δ.” δ is tunable; the efficiency curve shows the cost/benefit of different choices.
-- **Uncertainty** — We report a bootstrap 95% CI for the default policy so stakeholders see both the expected gain and the range of plausible outcomes.
+- **Policy evaluation** — We sweep thresholds and plot the tradeoff: more reallocation vs. total gain. 
+- **Decision optimization** — Turn model output into a rule: “Act when uplift > δ.” δ is tunable; the efficiency curve shows the cost/benefit of different choices.
+- **Uncertainty** — Report a bootstrap 95% CI for the default policy so stakeholders see both the expected gain and the range of plausible outcomes.
 
 This mirrors real-world product systems where we deploy an intervention only when expected marginal value exceeds a threshold—whether that’s marketing spend, recommendation targeting, or pricing. Here the “intervention” is reallocating a 2pt shot to a 3pt.
 
@@ -82,7 +82,7 @@ The app has two tabs:
 <img width="1654" height="932" alt="image" src="https://github.com/user-attachments/assets/e1fb8458-1b66-4263-bf57-d822f355ac2d" />
 
 
-**Policy Insights** — We load the policy sweep and bootstrap results (run `python -m src.simulate` first). You see the efficiency curve (percent of 2pt shots reallocated vs. gain per 100 shots). A slider lets you pick an uplift threshold; we show the corresponding percent replaced and EV gain per 100 shots. When the chosen threshold matches the bootstrap default (0.05), we display the 95% CI so you can see how precise the estimated gain is.
+**Policy Insights** — Load the policy sweep and bootstrap results (run `python -m src.simulate` first). You see the efficiency curve (percent of 2pt shots reallocated vs. gain per 100 shots). A slider lets you pick an uplift threshold and shows the corresponding percent replaced and EV gain per 100 shots. When the chosen threshold matches the bootstrap default (0.05), we display the 95% CI so you can see how precise the estimated gain is.
 
 <img width="927" height="619" alt="image" src="https://github.com/user-attachments/assets/11ddec78-d093-45a9-819f-53bf1f8dfa36" />
 
